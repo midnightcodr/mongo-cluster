@@ -36,4 +36,21 @@ mongo --host ${mongodb1}:${port} <<EOF
     };
     rs.initiate(cfg, { force: true });
     rs.reconfig(cfg, { force: true });
+    _cfg=rs.conf()
+    _cfg.members[0].priority=1
+    _cfg.members[1].priority=0.5
+    _cfg.members[2].priority=0.5
+    rs.reconfig(_cfg, { force: true });
 EOF
+echo "Waiting for ${mongodb1} to become master.."
+until mongo --host ${mongodb1}:${port} --eval 'quit(db.runCommand({ isMaster: 1 }).isMaster ? 0 : 2)' &>/dev/null; do
+  printf '.'
+  sleep 1
+done
+mongo --host ${mongodb1}:${port} <<EOF2
+    use app;
+    db.list.insert([
+        {title: 'one'},
+        {title: 'two'}
+    ]);
+EOF2
