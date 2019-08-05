@@ -42,15 +42,16 @@ mongo --host ${mongodb1}:${port} <<EOF
     _cfg.members[2].priority=0.5
     rs.reconfig(_cfg, { force: true });
 EOF
-echo "Waiting for ${mongodb1} to become master.."
-until mongo --host ${mongodb1}:${port} --eval 'quit(db.runCommand({ isMaster: 1 }).isMaster ? 0 : 2)' &>/dev/null; do
-  printf '.'
-  sleep 1
-done
-mongo --host ${mongodb1}:${port} <<EOF2
-    use app;
-    db.list.insert([
-        {title: 'one'},
-        {title: 'two'}
-    ]);
-EOF2
+#echo "Waiting for ${mongodb1} to become master.."
+#until mongo --host ${mongodb1}:${port} --eval 'quit(db.runCommand({ isMaster: 1 }).isMaster ? 0 : 2)' &>/dev/null; do
+#  printf '.'
+#  sleep 1
+#done
+#sleep 5
+#mongo --host ${mongodb1}:${port} <<EOF2
+#    use app;
+#    db.list.insert([
+#        {title: 'one'},
+#        {title: 'two'}
+#    ]);
+#EOF2
