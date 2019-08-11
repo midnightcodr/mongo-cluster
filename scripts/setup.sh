@@ -22,36 +22,34 @@ mongo --host ${mongodb1}:${port} <<EOF
         "members": [
             {
                 "_id": 0,
-                "host": "${mongodb1}:${port}"
+                "host": "${mongodb1}:${port}",
+                "priority": 1
             },
             {
                 "_id": 1,
-                "host": "${mongodb2}:${port}"
+                "host": "${mongodb2}:${port}",
+                "priority": 0.5
             },
             {
                 "_id": 2,
-                "host": "${mongodb3}:${port}"
+                "host": "${mongodb3}:${port}",
+                "priority": 0.5
             }
         ]
     };
     rs.initiate(cfg, { force: true });
     rs.reconfig(cfg, { force: true });
-    _cfg=rs.conf()
-    _cfg.members[0].priority=1
-    _cfg.members[1].priority=0.5
-    _cfg.members[2].priority=0.5
-    rs.reconfig(_cfg, { force: true });
 EOF
-#echo "Waiting for ${mongodb1} to become master.."
-#until mongo --host ${mongodb1}:${port} --eval 'quit(db.runCommand({ isMaster: 1 }).isMaster ? 0 : 2)' &>/dev/null; do
-#  printf '.'
-#  sleep 1
-#done
-#sleep 5
-#mongo --host ${mongodb1}:${port} <<EOF2
-#    use app;
-#    db.list.insert([
-#        {title: 'one'},
-#        {title: 'two'}
-#    ]);
-#EOF2
+echo "Waiting for ${mongodb1} to become master.."
+until mongo --host ${mongodb1}:${port} --eval 'quit(db.runCommand({ isMaster: 1 }).ismaster ? 0 : 2)' &>/dev/null; do
+  printf '.'
+  sleep 1
+done
+sleep 5
+mongo --host ${mongodb1}:${port} <<EOF2
+    use app;
+    db.list.insert([
+        {title: 'one'},
+        {title: 'two'}
+    ]);
+EOF2
