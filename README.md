@@ -60,7 +60,7 @@ main()
 ### test the application
 ```bash
 npm i   # install from the host
-runnode # this runs the nodejs script from within the node container
+runnode cluster-auth-test.js --net=mongo-cluster_default # this runs the nodejs script from within the node container, mongo-cluster is the directory name of this git repo
 ```
 
 ### example output
