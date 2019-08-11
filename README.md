@@ -70,3 +70,9 @@ start
   { _id: 5d506140875b7c82505db67e, title: 'two' } ]
 end
 ```
+
+# Bring down the cluster
+In a separate shell, run
+```
+docker-compose down
+```

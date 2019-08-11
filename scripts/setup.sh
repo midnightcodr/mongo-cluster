@@ -45,7 +45,6 @@ until mongo --host ${mongodb1}:${port} --eval 'quit(db.runCommand({ isMaster: 1 
   printf '.'
   sleep 1
 done
-sleep 5
 mongo --host ${mongodb1}:${port} <<EOF2
     use app;
     db.list.insert([
